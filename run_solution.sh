@@ -14,6 +14,10 @@ do
             TEST=YES
             shift
             ;;
+        -p|--print-test)
+            PRINT=YES
+            shift
+            ;;
         *)
             POS_ARGS+=("$1")
             shift
@@ -22,7 +26,11 @@ do
 done
 
 if [[ "${TEST}" == YES ]]; then
-    python -t -m ${NUM}.${NUM}.py
+    if [[ "${PRINT}" == YES ]]; then
+        python -m ${NUM}.${NUM} -t -p
+    else
+        python -m ${NUM}.${NUM} -t
+    fi
 else
-    python ${NUM}/${NUM}.py -m pkg.handle_test
+    python -m ${NUM}.${NUM}
 fi

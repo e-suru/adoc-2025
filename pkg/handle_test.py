@@ -14,21 +14,23 @@ class bcolors:
 
 def get_parser():
     parser = argparse.ArgumentParser(prog="Advent of Code 2025 solution")
-    parser.add_argument('-t', '--test')
+    parser.add_argument('-t', '--test', action='store_true')
+    parser.add_argument('-p', '--printtest', action='store_true')
     return parser
 
-def run_solution(solution):
+def run_solution(solution, num, t_files, q_file):
     parser = get_parser()
     args = parser.parse_args()
-    print(args)
     if (args.test):
         counter = 0
         passed = 0
-        for test in Path('testcases').iterdir():
+        for test in Path(str(num) + t_files).iterdir():
             if test.is_file():
                 full_test = test.read_text().split("\n")
                 answer = full_test.pop()
                 sol_answer = str(solution(full_test))
+                if (args.printtest):
+                    print(f"{bcolors.BOLD} Test {counter}:{bcolors.ENDC} {full_test}")
                 if (answer == sol_answer):
                     passed += 1
                     print(f"{bcolors.OKGREEN}Passed test case {counter}{bcolors.ENDC}")
@@ -37,7 +39,7 @@ def run_solution(solution):
                 counter += 1
         print(f"Passed {passed}/{counter} tests")
     else:
-        with Path('q/0.txt').open() as f:
-            q_input = f.readlines().split("\n")
+        with Path(str(num) + q_file).open() as f:
+            q_input = f.read().split("\n")
             answer = solution(q_input)
             print(f"Answer: {answer}")
